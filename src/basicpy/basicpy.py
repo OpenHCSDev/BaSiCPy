@@ -16,12 +16,10 @@ import jax.numpy as jnp
 
 # 3rd party modules
 import numpy as np
-from hyperactive import Hyperactive
-from hyperactive.optimizers import HillClimbingOptimizer
 from jax import device_put
 from jax.image import ResizeMethod
 from jax.image import resize as jax_resize
-from pydantic import BaseModel, Field, PrivateAttr, root_validator
+from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 from skimage.filters import threshold_otsu
 from skimage.morphology import ball, binary_erosion
 from skimage.transform import resize as skimage_resize
@@ -193,13 +191,10 @@ class BaSiC(BaseModel):
     _smoothness_darkfield: float = PrivateAttr(None)
     _sparse_cost_darkfield: float = PrivateAttr(None)
 
-    class Config:
-        """Pydantic class configuration."""
+    model_config = ConfigDict(arbitrary_types_allowed=True, extra="forbid")
 
-        arbitrary_types_allowed = True
-        extra = "forbid"
-
-    @root_validator(pre=True)
+    @model_validator(mode="before")
+    @classmethod
     def debug_log_values(cls, values: Dict[str, Any]):
         """Use a validator to echo input values."""
         logger.debug("Initializing BaSiC with parameters:")
@@ -389,7 +384,7 @@ class BaSiC(BaseModel):
             init_mu = self.mu_coef / spectral_norm
         else:
             init_mu = self.mu_coef / spectral_norm / np.prod(Im2.shape)
-        fit_params = self.dict()
+        fit_params = self.model_dump()
         fit_params.update(
             dict(
                 smoothness_flatfield=self._smoothness_flatfield,
@@ -714,6 +709,9 @@ class BaSiC(BaseModel):
 
         """
 
+        from hyperactive import Hyperactive
+        from hyperactive.optimizers import HillClimbingOptimizer
+
         if search_space is None:
             search_space = {
                 "smoothness_flatfield": list(np.logspace(-3, 1, 15)),
@@ -738,7 +736,7 @@ class BaSiC(BaseModel):
                 )
 
         # calculate the histogram range
-        basic = self.copy(update=init_params)
+        basic = self.model_copy(update=init_params)
         basic.fit(
             images,
             fitting_weight=fitting_weight,
@@ -757,7 +755,7 @@ class BaSiC(BaseModel):
 
         def fit_and_calc_entropy(params):
             try:
-                basic = self.copy(update=params)
+                basic = self.model_copy(update=params)
                 basic.fit(
                     images,
                     fitting_weight=fitting_weight,
@@ -837,7 +835,7 @@ class BaSiC(BaseModel):
         Returns:
             current settings
         """
-        return self.dict()
+        return self.model_dump()
 
     def save_model(self, model_dir: PathLike, overwrite: bool = False) -> None:
         """Save current model to folder.
@@ -859,7 +857,7 @@ class BaSiC(BaseModel):
         # save settings
         with open(path / _SETTINGS_FNAME, "w") as fp:
             # see pydantic docs for output options
-            fp.write(self.json())
+            fp.write(self.model_dump_json())
 
         # NOTE emit warning if profiles are all zeros? fit probably not run
         # save profiles

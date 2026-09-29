@@ -1,23 +1,11 @@
 """2D and 3D discrete cosine transform tools."""
 
-import importlib.util
 import logging
-import os
 from abc import ABC, abstractmethod, abstractproperty
-from functools import partial
 
 import numpy as np
 import scipy.fft
 import jax
-from jax import jit
-import basicpy.tools._jax_idct
-
-__all__ = [
-    "dct2d",
-    "idct2d",
-    "dct3d",
-    "idct3d",
-]
 
 # initialize logger with the package name
 logger = logging.getLogger(__name__)
@@ -67,13 +55,11 @@ class JaxDCT(DCT):
     def dct3d(arr: np.ndarray) -> np.ndarray:
         return JaxDCT.dctnd(arr)
 
-    # custom idct since JAX only implements dct type 2 (not idct, dct type 3)
     @staticmethod
-    @partial(jit, static_argnames=["ndims"])
     def idctnd(arr: np.ndarray, ndims: int) -> np.ndarray:
-        for i in range(ndims):
-            arr = basicpy.tools._jax_idct.idct(arr, norm="ortho", axis=i)
-        return arr
+        return jax.scipy.fft.idctn(
+            arr, norm="ortho", type=2, axes=tuple(range(ndims))
+        )
 
     @staticmethod
     def idct2d(arr: np.ndarray) -> np.ndarray:
