@@ -1,27 +1,17 @@
 """Nox automation file."""
 
-import platform
 import shutil
 from pathlib import Path
 
 from nox import Session, session
 
-python_versions = ["3.11", "3.10", "3.9", "3.8"]
+python_versions = ["3.11", "3.12", "3.13", "3.14"]
 
 
 @session(python=python_versions)
 def tests(session: Session) -> None:
     """Run the test suite."""
-    if platform.system() == "Windows":
-        session.install(
-            "jax[cpu]==0.4.11",
-            "-f",
-            "https://whls.blob.core.windows.net/unstable/index.html",
-            "--use-deprecated",
-            "legacy-resolver",
-        )
-        session.install("ml-dtypes==0.2.0")
-    session.install(".")
+    session.install(".[autotune]")
     session.install(
         "dask",
         "pytest",

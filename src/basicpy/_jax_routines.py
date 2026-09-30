@@ -5,7 +5,7 @@ import numpy as np
 from jax import jit, lax
 from jax import numpy as jnp
 from jax.tree_util import register_pytree_node_class
-from pydantic import BaseModel, Field, PrivateAttr
+from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 
 from basicpy.tools.dct_tools import JaxDCT
 
@@ -57,9 +57,7 @@ class BaseFit(BaseModel):
         description="Maximum number of iterations for single optimization.",
     )
 
-    class Config:
-        frozen = True
-        extra = "ignore"
+    model_config = ConfigDict(frozen=True, extra="ignore")
 
     def _cond(self, vals):
         k = vals[0]
@@ -200,7 +198,7 @@ class BaseFit(BaseModel):
     def tree_flatten(self):
         # all of the fields are treated as "static" values for JAX
         children = []
-        aux_data = self.dict()
+        aux_data = self.model_dump()
         return (children, aux_data)
 
     @classmethod
