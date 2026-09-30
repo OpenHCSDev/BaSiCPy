@@ -1,9 +1,16 @@
-# BaSiCPy
+# OpenHCS BaSiCPy
+
+This is OpenHCSDev's JAX-based fork, packaged as `openhcs-basicpy`. It retains
+the `basicpy` Python API; it is not the upstream PyPI `basicpy` 2.x PyTorch
+implementation. Use `pip install openhcs-basicpy` for this fork. Do not install
+both distributions into the same environment: they provide the same Python
+package. Numerical and saved-model controls cover Python 3.12 and 3.14; this
+does not establish biological validity for a new acquisition.
 A python package for background and shading correction of optical microscopy images
 
-[![PyPI](https://img.shields.io/pypi/v/basicpy.svg)](https://pypi.org/project/basicpy)
-[![Status](https://img.shields.io/pypi/status/basicpy.svg)](https://pypi.org/project/basicpy/)
-[![Python Version](https://img.shields.io/pypi/pyversions/basicpy.svg)](https://python.org)
+[![PyPI](https://img.shields.io/pypi/v/openhcs-basicpy.svg)](https://pypi.org/project/openhcs-basicpy)
+[![Status](https://img.shields.io/pypi/status/openhcs-basicpy.svg)](https://pypi.org/project/openhcs-basicpy/)
+[![Python Version](https://img.shields.io/pypi/pyversions/openhcs-basicpy.svg)](https://python.org)
 [![License](https://img.shields.io/pypi/l/basicpy)](https://github.com/peng-lab/BaSiCPy/blob/main/LICENSE)
 [![Tests](https://github.com/peng-lab/basicpy/workflows/CI/badge.svg)](https://github.com/peng-lab/basicpy/actions?workflow=CI)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
@@ -39,53 +46,25 @@ See [Read the Docs](https://basicpy.readthedocs.io/en/latest/) for the detailed 
 
 ## Installation
 
-### For Mac (Intel chip), Linux or WSL2 users
-
- Install from PyPI
+After the first fork release is published:
 
 ```console
-pip install basicpy
+pip install openhcs-basicpy
 ```
 
-or install the latest development version
+Development installation uses this fork:
 
 ```console
-git clone https://github.com/peng-lab/BaSiCPy.git
+git clone https://github.com/OpenHCSDev/BaSiCPy.git
 cd BaSiCPy
 pip install .
 ```
 
-### For Mac users with M1 / M2 chip
-
-BaSiCPy requires [`jax`](https://github.com/google/jax/),
-which has potential build issue with M1 chips.
-One easiest solution is using [Miniforge](https://github.com/conda-forge/miniforge)
-as explained [here](https://github.com/google/jax/issues/5501).
-In the Miniforge environment, please try the following:
-```bash
-conda install -c conda-forge jax jaxlib
-pip install basicpy
-```
-
-### For Windows users
-
-BaSiCPy requires [`jax`](https://github.com/google/jax/) which does not support Windows officially.
-However, thanks to [cloudhan/jax-windows-builder](https://github.com/cloudhan/jax-windows-builder), we can install BaSiCPy as follows:
-
-```bash
-pip install "jax[cpu]==0.4.11" -f https://whls.blob.core.windows.net/unstable/index.html --use-deprecated legacy-resolver
-pip install ml-dtypes==0.2.0
-pip install basicpy
-```
-
-One may need to add
-```python
-import jax
-jax.config.update('jax_platform_name', 'cpu')
-```
-at the top of the script to ensure that JAX uses CPU.
-
-For details and latest updates, see [this issue](https://github.com/google/jax/issues/438).
+The fork requires Python 3.11+ and JAX 0.9.2. CPU wheel availability follows
+the [JAX installation guide](https://docs.jax.dev/en/latest/installation.html):
+Linux x86-64/ARM64, Apple Silicon macOS, and Windows x86-64. Modern JAX does not
+publish Intel macOS wheels. CPU numerical acceptance here covers Linux Python
+3.12 and 3.14, not a tested cross-platform installation matrix.
 
 ### Install with dev dependencies
 
