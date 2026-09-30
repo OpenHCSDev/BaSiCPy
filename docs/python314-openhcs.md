@@ -1,7 +1,13 @@
 # JAX prototype modernization for OpenHCS
 
-This is a draft source checkpoint, not an installed or fit-validated release.
-Integration owner: Linnaeus (OpenHCS backend/dependencies, issue
+Current parent checkpoint: real Python 3.14 CPU fits, persisted model reload,
+stationary-signal control and public DCT comparisons passed. See the canonical
+[numerical receipt](python314-numeric-20260930.rst). Nothing has been installed;
+OpenHCS compiled/MCP acceptance is still separate.
+
+The following records the historical 2026-09-29 source-only checkpoint and its
+then-pending checks; it must not be read as today's package availability.
+Original integration owner: Linnaeus (OpenHCS backend/dependencies, issue
 [OpenHCS #213](https://github.com/OpenHCSDev/openhcs/issues/213)).
 
 ## Provenance and API
