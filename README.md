@@ -6,6 +6,8 @@ implementation. Use `pip install openhcs-basicpy` for this fork. Do not install
 both distributions into the same environment: they provide the same Python
 package. Numerical and saved-model controls cover Python 3.12 and 3.14; this
 does not establish biological validity for a new acquisition.
+Use the `BaSiC` Python API shown below; the inherited, unimplemented CLI has
+been removed rather than advertised as a working command.
 A python package for background and shading correction of optical microscopy images
 
 [![PyPI](https://img.shields.io/pypi/v/openhcs-basicpy.svg)](https://pypi.org/project/openhcs-basicpy)
